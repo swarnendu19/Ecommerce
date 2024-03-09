@@ -3,13 +3,16 @@ import { lazy, Suspense } from "react"
 import Loader from "./components/Loader"
 import Header from "./components/Header"
   
+  
+  
 
 const Cart =   lazy(()=> import ("./pages/Cart")) 
 const Home =   lazy(()=>import ("./pages/Home"))
 const Search = lazy(()=>import ("./pages/Search")) 
 const Shipping = lazy(()=> import("./pages/Shipping"))
 const Login = lazy(()=> import("./pages/Login"))
-
+const Orders = lazy (()=> import("./pages/Orders"))
+const OrderDetails = lazy(()=> import("./pages/OrderDetails"))
 
 /// Admin Routes importing
 
@@ -50,6 +53,8 @@ function App() {
 
        <Route >
             <Route path="/shipping" element={<Shipping />} />
+            <Route path = "/orders" element= {<Orders /> } />
+            <Route path = "/order/:id" element= {<OrderDetails /> } />
        </Route>
 
        // Admin Routes

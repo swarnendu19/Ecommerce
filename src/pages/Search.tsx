@@ -11,8 +11,8 @@ function Search() {
   const [maxPrice, setMaxPrice] = useState(10000)
   const [category , setCategory] = useState("")
   const [page, setPage] = useState(1)
-  const isNextPage = true
-  const isPreviousPage = true
+  const isNextPage = page < 4;
+  const isPreviousPage = page>1
 
   return (
     <div className="product-search-page">
