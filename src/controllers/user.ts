@@ -19,9 +19,7 @@ export const newUser = asyncHandler(
                     message: `Welcome , ${user.name}`,
                   })
 
-                  if (
-                    !_id || !name || !email || !photo || !gender || !dob
-                ) {
+        if (!_id || !name || !email || !photo || !gender || !dob) {
                     throw new ApiError(400, "All fields are required")
                 }
 
