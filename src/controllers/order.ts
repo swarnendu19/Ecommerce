@@ -2,6 +2,8 @@ import { asyncHandler } from "../utils/asyncHandler.js"
 import { myCache } from "../app.js";
 import { Order } from "../models/order.js";
 import { ApiError } from "../utils/ApiError.js";
+import { reduceStock } from "../utils/features.js";
+import { invalidateCache } from "../utils/features.js"; 
 
 export const myOrders = asyncHandler(
     async(req, res) =>{
@@ -63,5 +65,45 @@ export const getSingleOrder = asyncHandler(
             success: true,
             order
         })
+    }
+)
+
+export const newOrder = asyncHandler(
+    async(req,res,next)=>{
+        const {
+            shippingInfo,
+            orderItems,
+            subtotal,
+            tax,
+            user,
+            shippingCharges,
+            discount,
+            total
+        } = req.body ;
+
+        if(!shippingInfo || !orderItems || !user || !subtotal || !tax || !total) 
+           throw new ApiError(400, "Abe sare field dal de")
+
+        const order = await Order.create({
+            shippingInfo,
+            orderItems,
+
+            user,
+            subtotal,
+            tax,
+            shippingCharges,
+            discount,
+            total,
+        })   
+
+        await reduceStock(orderItems);
+
+        invalidateCache({
+            product: true,
+            order: true,
+            admin: true,
+            userId: user,
+            productId: order.orderItems.map((i) => String(i.productId)),
+          });
     }
 )
