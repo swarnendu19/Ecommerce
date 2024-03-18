@@ -3,8 +3,7 @@ import { deleteUser, getAllUsers, getUser, newUser } from "../controllers/user.j
 import { adminOnly } from "../middlewares/ auth.js";
 
 
-const app = express 
-
+ 
 const router= Router();
 
 router.route("/").post(
@@ -21,4 +20,4 @@ router.route("/all").get(adminOnly, getAllUsers)
 router.route("/:id").get(getUser).delete(adminOnly,deleteUser);
 
 
-export default app;
+export default router;
