@@ -1,18 +1,24 @@
-import express from "express"; // Import Express module
-import userRoute from "./routes/user.js"; // Assuming user.js is in a subfolder named routes
+import express from "express";  
 import NodeCache from "node-cache" 
+import  bodyParser from "body-parser"
 
-const app = express(); // Create an Express application instance
+const app = express();  
 
   
 export const myCache = new NodeCache
 
-app.get("/", (req, res) => { // Route handler for the root path ("/")
-  res.send("API is working with api/v1"); // Send a response message
+app.use(bodyParser.json());  
+app.use(bodyParser.urlencoded({ extended: true }));  
+
+app.get("/", (req, res) => { 
+  res.send("API is working with api/v1");  
 });
 
+
+import userRoute from "./routes/user.js"; 
+import orderRoute from "./routes/order.js"
  
-app.use("/api/v1/user", userRoute); // Mount the user routes at the specified path
- 
+app.use("/api/v1/user", userRoute);
+app.use("/api/v1/order", orderRoute);
 
 export {app}
