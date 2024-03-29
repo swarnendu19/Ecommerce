@@ -2,11 +2,10 @@ import { myCache } from "../app.js";
 import { Product } from "../models/produc.js";
 import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { NewUserRequestBody } from "../types/types.js";
 import { Request } from "express";
 import {rm } from "fs"
 import { invalidateCache } from "../utils/features.js";
-
+import { NewProductRequestBody } from "../types/types.js";
 
 export const getlatestProducts = asyncHandler(async (req, res, next) => {
     let products;
@@ -75,10 +74,9 @@ export const getlatestProducts = asyncHandler(async (req, res, next) => {
   });
 
   export const newProduct = asyncHandler(
-    async(req: Request<{}, {}, NewUserRequestBody>, res, next)=>{
+    async(req: Request<{}, {}, NewProductRequestBody>, res, next)=>{
         const { name, price, stock, category } = req.body;
         const photo = req.file;
-
         if(!photo) throw new ApiError(400, "Please add photo")
         
         if(!photo || !price || !stock || !category){
@@ -86,7 +84,7 @@ export const getlatestProducts = asyncHandler(async (req, res, next) => {
                 console.log("Deleted");
                 
             })
-            throw new ApiError(400, "Abe Sare Fields Dal ", 400)
+            throw new ApiError(400, "Abe Sare Fields Dal ")
         }
 
         await Product.create({
@@ -106,3 +104,4 @@ export const getlatestProducts = asyncHandler(async (req, res, next) => {
 
     }
   )
+

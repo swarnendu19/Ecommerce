@@ -9,6 +9,13 @@ export interface NewUserRequestBody{
     dob: string;
 }
 
+export interface NewProductRequestBody{
+    name: string;
+    category: string;
+    price: number;
+    stock: number;
+}
+
 export type OrderItemType = {
     name: string;
     photo: string;

@@ -9,7 +9,7 @@ export const adminOnly = asyncHandler(
         const {id} = req.query;
 
         if(!id) {
-            throw new ApiError(401, "Login Kar le sale");
+            throw new ApiError(401, "Bhai Login Kar le");
         }
 
         const user = await User.findById(id)
