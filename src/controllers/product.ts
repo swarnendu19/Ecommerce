@@ -105,3 +105,21 @@ export const getlatestProducts = asyncHandler(async (req, res, next) => {
     }
   )
 
+export const updateProduct = asyncHandler(
+  async(req, res)=>{
+    const {id} = req.params ;
+    const {name , price, stock, category} = req.body;
+    const photo =req.file;
+    const product = await Product.findById(id);
+
+    if(!product){
+      throw new ApiError(404, "Product Not Found");
+    }
+    if(photo){
+      rm(product.photo! , ()=>{
+        console.log("Old Photo Deleted");
+      });
+      product.photo = photo.path;
+    }
+  }
+)

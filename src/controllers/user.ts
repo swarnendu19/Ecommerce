@@ -7,8 +7,7 @@ import { ApiError } from "../utils/ApiError.js";
 export const newUser = asyncHandler(
     async (
         req: Request<{}, {}, NewUserRequestBody>,
-        res: Response,
-        next: NextFunction) =>{
+        res: Response) =>{
         const {name, email, photo, gender, _id, dob} = req.body;
         let user = await User.findById(_id);
 
