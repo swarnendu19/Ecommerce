@@ -32,3 +32,13 @@ export type InvalidateCacheProps = {
     orderId?: string;
     productId?: string | string[];
   };
+
+
+  export interface BaseQuery{
+    name?:{
+        $regex: string;
+        $option: string;
+    };
+    price?:{$lte: number};
+    category?:string;
+  }

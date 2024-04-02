@@ -5,7 +5,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { Request } from "express";
 import {rm } from "fs"
 import { invalidateCache } from "../utils/features.js";
-import { NewProductRequestBody } from "../types/types.js";
+import { BaseQuery, NewProductRequestBody } from "../types/types.js";
 
 export const getlatestProducts = asyncHandler(async (req, res, next) => {
     let products;
@@ -121,5 +121,48 @@ export const updateProduct = asyncHandler(
       });
       product.photo = photo.path;
     }
+  }
+)
+
+
+export const deleteProduct = asyncHandler(
+  async(req, res)=>{
+    const product = await Product.findById(req.params.id);
+    if(!product) throw new ApiError(404, "Product Not found")
+
+    rm(product.photo! , ()=>{
+      console.log("Product Photo Deleted");
+    })
+
+    await product.deleteOne();
+
+    invalidateCache({
+      product: true,
+      productId: String(product._id),
+      admin: true
+    })
+    return res.status(200).json({
+      success: true,
+      message: "Product Deleted Successfully",
+    });
+  }
+)
+
+
+export const getAllProducts = asyncHandler(
+  async(req, res)=>{
+    const {search, sort , category, price} = req.query;
+
+    const page = Number(req.query.page) || 1;
+    
+    const limit = Number(process.env.PRODUCT_PER_PAGE)|| 8;
+
+    const skip = (page - 1)* limit;
+
+    const baseQuery: BaseQuery = {}
+    
+     
+    
+
   }
 )
