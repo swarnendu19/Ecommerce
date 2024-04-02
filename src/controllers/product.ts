@@ -121,6 +121,25 @@ export const updateProduct = asyncHandler(
       });
       product.photo = photo.path;
     }
+
+    if(name) product.name = name ;
+    if(stock) product.stock = stock
+    if(price) product.price = price
+    if(category) product.category = category;
+
+    await product.save();
+
+    invalidateCache({
+      product: true,
+      productId: String(product._id),
+      admin: true,
+    })
+
+    return res.send(200)
+              .json({
+                success: true,
+                meesage: "Product Upated Successfully"
+              })
   }
 )
 
