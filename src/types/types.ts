@@ -42,3 +42,11 @@ export type InvalidateCacheProps = {
     price?:{$lte: number};
     category?:string;
   }
+
+  export type SearchRequestQuery = {
+    search?: string;
+    price?: string;
+    category?: string;
+    sort?: string;
+    page?:string;
+  }

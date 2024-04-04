@@ -5,7 +5,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { Request } from "express";
 import {rm } from "fs"
 import { invalidateCache } from "../utils/features.js";
-import { BaseQuery, NewProductRequestBody } from "../types/types.js";
+import { BaseQuery, NewProductRequestBody, SearchRequestQuery } from "../types/types.js";
 
 export const getlatestProducts = asyncHandler(async (req, res, next) => {
     let products;
@@ -169,7 +169,7 @@ export const deleteProduct = asyncHandler(
 
 
 export const getAllProducts = asyncHandler(
-  async(req, res)=>{
+  async(req: Request<{}, {}, {}, SearchRequestQuery>, res)=>{
     const {search, sort , category, price} = req.query;
 
     const page = Number(req.query.page) || 1;
@@ -178,10 +178,23 @@ export const getAllProducts = asyncHandler(
 
     const skip = (page - 1)* limit;
 
-    const baseQuery: BaseQuery = {}
+    const baseQuery: BaseQuery = {};
+
+    if(search) 
+     baseQuery.name = {
+      $regex: search,
+      $option: "i"
+     };
+
+     if(price)
+      baseQuery.price={
+        $lte: Number(price)
+      }
+
+    
+     if(category) baseQuery.category = category;
     
      
-    
-
+     
   }
 )
