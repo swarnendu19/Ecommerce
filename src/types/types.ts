@@ -37,7 +37,7 @@ export type InvalidateCacheProps = {
   export interface BaseQuery{
     name?:{
         $regex: string;
-        $option: string;
+        $options: string;
     };
     price?:{$lte: number};
     category?:string;

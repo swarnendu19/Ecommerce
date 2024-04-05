@@ -183,7 +183,7 @@ export const getAllProducts = asyncHandler(
     if(search) 
      baseQuery.name = {
       $regex: search,
-      $option: "i"
+      $options: "i"
      };
 
      if(price)
@@ -193,8 +193,23 @@ export const getAllProducts = asyncHandler(
 
     
      if(category) baseQuery.category = category;
-    
-     
-     
+
+     const productsPromise = Product.find(baseQuery)
+       .sort(sort && {price: sort === "asc" ? 1: -1})
+       .limit(limit)
+       .skip(skip);
+
+       const [products, filteredOnlyProduct] = await Promise.all([
+        productsPromise,
+        Product.find(baseQuery),
+       ])
+
+       const totalPage = Math.ceil(filteredOnlyProduct.length/ limit);
+
+       return res.status(200).json({
+        success: true,
+        products,
+        totalPage
+       })
   }
 )

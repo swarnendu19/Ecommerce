@@ -5,7 +5,7 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: [true, "Please enter Name"]
     },
-    photo:{
+     photo:{
         type: String,
         required: [true ,"Please give Product Photo"]
     },
@@ -20,7 +20,8 @@ const productSchema = new mongoose.Schema({
     },
     category:{
         type: String,
-        required: [true, "Please enter the category"]
+        required: [true, "Please enter the category"],
+        trim: true,
     }  
 },{
     timestamps: true

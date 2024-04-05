@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema(
         type: String,
         required: [true,"Please enter the email"],
         unique: [true, "Email already exists"],
-        // validate: validator._default.isEmail,
+        validate: validator._default.isEmail,
        },
        photo: {
         type: String,
@@ -45,10 +45,10 @@ const userSchema = new mongoose.Schema(
         enum: ["male", "female"],
         required: [true, "Please enter your gender"],
        },
-       dob:{
-        type: Date, 
-        required: [true, "Please enter date of Birth"],
-       },
+       dob: {
+        type: Date,
+        required: [true, 'Please provide a date of birth'],
+    }
 
     },
     {timestamps: true}
