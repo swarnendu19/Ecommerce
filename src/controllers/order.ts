@@ -4,6 +4,8 @@ import { Order } from "../models/order.js";
 import { ApiError } from "../utils/ApiError.js";
 import { reduceStock } from "../utils/features.js";
 import { invalidateCache } from "../utils/features.js"; 
+import { NewOrderRequestBody } from "../types/types.js";
+import { Request } from "express";
 
 export const myOrders = asyncHandler(
     async(req, res) =>{
@@ -69,7 +71,7 @@ export const getSingleOrder = asyncHandler(
 )
 
 export const newOrder = asyncHandler(
-    async(req,res,next)=>{
+    async(req: Request<{}, {}, NewOrderRequestBody>, res, next)=>{
         const {
             shippingInfo,
             orderItems,
