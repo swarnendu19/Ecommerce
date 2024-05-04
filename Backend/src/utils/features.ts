@@ -3,6 +3,7 @@ import { ApiError } from "./ApiError.js";
 import { OrderItemType } from "../types/types.js";
 import { InvalidateCacheProps } from "../types/types.js";
 import { myCache } from "../app.js";
+import { Document } from "mongoose";
 
 export const reduceStock = async(orderItems : OrderItemType[])=>{
     for(let i = 0; i< orderItems.length; i++){
@@ -90,6 +91,7 @@ export const calculatePercentage = (thisMonth: number, lastMonth: number) => {
   };
   
   interface MyDocument extends Document {
+    _id: string | import('mongoose').Types.ObjectId;
     createdAt: Date;
     discount?: number;
     total?: number;

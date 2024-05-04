@@ -1,5 +1,5 @@
 import express from "express"
-import { adminOnly } from "../middlewares/ auth.js";
+import { adminOnly } from "../middlewares/auth.js";
 import { deleteProduct, getAdminProducts, getAllCategories, getAllProducts, getlatestProducts, getSingleProduct, newProduct, updateProduct } from "../controllers/product.js";
 import { singleUpload } from "../middlewares/multer.js";
 

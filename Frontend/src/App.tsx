@@ -2,11 +2,17 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import { lazy, Suspense } from "react"
 import Loader from "./components/Loader"
 import Header from "./components/Header"
+import { Toaster } from "react-hot-toast" 
+  
+  
+
 const Cart =   lazy(()=> import ("./pages/Cart")) 
 const Home =   lazy(()=>import ("./pages/Home"))
 const Search = lazy(()=>import ("./pages/Search")) 
-
-
+const Shipping = lazy(()=> import("./pages/Shipping"))
+const Login = lazy(()=> import("./pages/Login"))
+const Orders = lazy (()=> import("./pages/Orders"))
+const OrderDetails = lazy(()=> import("./pages/OrderDetails"))
 
 /// Admin Routes importing
 
@@ -39,6 +45,18 @@ function App() {
        <Route path="/cart" element={<Cart/>} /> 
        <Route path="/search" element={<Search/>} /> 
 
+       //Not Login router
+
+       <Route path = "/login" element = {<Login/>}/>
+
+       // Login User Routes
+
+       <Route >
+            <Route path="/shipping" element={<Shipping />} />
+            <Route path = "/orders" element= {<Orders /> } />
+            <Route path = "/order/:id" element= {<OrderDetails /> } />
+       </Route>
+
        // Admin Routes
 
        <Route
@@ -69,6 +87,7 @@ function App() {
 
      </Routes>
     </Suspense>
+    <Toaster position="bottom-center"/> 
     </Router>
   )
 }
