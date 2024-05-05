@@ -2,6 +2,7 @@ import express from "express";
 import NodeCache from "node-cache" 
 import  bodyParser from "body-parser"
 import morgan from "morgan";
+import cors from "cors"
 
 const app = express();  
 
@@ -12,6 +13,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));  
 app.use(express.json())
 app.use(morgan("dev"))
+app.use(cors());
 
 app.get("/", (req, res) => { 
   res.send("API is working with api/v1");  
