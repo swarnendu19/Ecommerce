@@ -5,6 +5,8 @@ import Header from "./components/Header"
 import { Toaster } from "react-hot-toast" 
 import { onAuthStateChanged } from "firebase/auth"
 import { auth } from "./firebase"
+import { useDispatch } from "react-redux"
+import { userExist } from "./redux/reducer/userReducer"
   
   
 
@@ -39,10 +41,13 @@ const TransactionManagement = lazy(
 
 function App() {
 
+  const dispatch = useDispatch();
+
   useEffect(()=>{
     onAuthStateChanged(auth, (user)=>{
        if(user){
-        console.log("Logged In"); 
+        console.log("Logged In");
+        dispatch(userExist()) 
        }else{
         console.log("Not Logged In");
        }
