@@ -1,8 +1,10 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
-import { lazy, Suspense } from "react"
+import { lazy, Suspense, useEffect } from "react"
 import Loader from "./components/Loader"
 import Header from "./components/Header"
 import { Toaster } from "react-hot-toast" 
+import { onAuthStateChanged } from "firebase/auth"
+import { auth } from "./firebase"
   
   
 
@@ -36,6 +38,17 @@ const TransactionManagement = lazy(
 
 
 function App() {
+
+  useEffect(()=>{
+    onAuthStateChanged(auth, (user)=>{
+       if(user){
+        console.log("Logged In"); 
+       }else{
+        console.log("Not Logged In");
+       }
+    })
+  })
+
   return (
     < Router>
      <Header /> 
