@@ -53,7 +53,7 @@ const App = () => {
         const data = await getUser(user.uid);
         dispatch(userExist(data.user));
       } else dispatch(userNotExist());
-    });
+    })
   }, []);
 
   return loading ? (
