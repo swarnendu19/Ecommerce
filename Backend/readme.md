@@ -13,7 +13,7 @@ This is the complete Backend of the E-commerce Application
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/yourproject.git
+    git clone https://github.com/swarnendu19/Ecommerce.git
     ```
 
 2. Navigate to the project directory:
