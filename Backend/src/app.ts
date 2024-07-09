@@ -3,11 +3,16 @@ import NodeCache from "node-cache"
 import  bodyParser from "body-parser"
 import morgan from "morgan";
 import cors from "cors"
+import Stripe from "stripe";
 
 const app = express();  
 
   
 export const myCache = new NodeCache();
+
+const stripeKey = process.env.STRIPE_KEY || "";
+export const stripe = new stripe(stripeKey);
+
 
 app.use(bodyParser.json());  
 app.use(bodyParser.urlencoded({ extended: true }));  
