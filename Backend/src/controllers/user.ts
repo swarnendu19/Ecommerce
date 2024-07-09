@@ -4,6 +4,7 @@ import { User } from "../models/user.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 
+//Register User
 export const newUser = asyncHandler(
     async (
         req: Request<{}, {}, NewUserRequestBody>,
