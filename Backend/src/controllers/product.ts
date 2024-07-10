@@ -2,7 +2,6 @@ import { Product } from "../models/product.js";
 import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { Request } from "express";
-import {rm } from "fs"
 import { findAverageRatings, invalidateCache } from "../utils/features.js";
 import { BaseQuery, NewProductRequestBody, SearchRequestQuery } from "../types/types.js";
 import { redis, redisTTL } from "../app.js";
@@ -86,10 +85,11 @@ export const getlatestProducts = asyncHandler(async (req, res, next) => {
     async(req: Request<{}, {}, NewProductRequestBody>, res, next)=>{
       const { name, price, stock, category, description } = req.body;
       const photos = req.files as Express.Multer.File[] | undefined;
-        if(!photos) throw new ApiError(400, "Please add photo")
-        
-          if (photos.length < 1)
-            throw new ApiError(400,"Please add atleast one Photo");
+          
+    // Validate photo upload
+    if (!photos || photos.length === 0) {
+      throw new ApiError(400, "Please add at least one photo");
+    }
       
           if (photos.length > 5)
             throw new ApiError(400,"You can only upload 5 Photos");
@@ -97,7 +97,7 @@ export const getlatestProducts = asyncHandler(async (req, res, next) => {
         if( !name || !price || !stock || !category){
             throw new ApiError(400, "Please Enter all Fields")
         }
-        const photosURL = await uploadToCloudinary(photos);
+        const photosURL = await uploadToCloudinary(photos);        
         await Product.create({
             name, 
             price,
@@ -118,7 +118,7 @@ export const getlatestProducts = asyncHandler(async (req, res, next) => {
   )
 
 export const updateProduct = asyncHandler(
-  async(req, res)=>{
+  async(req: Request, res)=>{
     const { id } = req.params;
   const { name, price, stock, category, description } = req.body;
   const photos = req.files as Express.Multer.File[] | undefined;
@@ -134,10 +134,8 @@ export const updateProduct = asyncHandler(
 
     await deleteFromCloudinary(ids);
 
-    product.photos = photosURL.map(photo => ({
-      public_id: photo.public_id,
-      url: photo.url
-  }));;
+      // Use Mongoose's `set` method to properly update the DocumentArray
+      product.set({ photos: photosURL });
   }
 
   if (name) product.name = name;
