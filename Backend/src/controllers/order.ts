@@ -1,26 +1,27 @@
 import { asyncHandler } from "../utils/asyncHandler.js"
-import { myCache } from "../app.js";
 import { Order } from "../models/order.js";
 import { ApiError } from "../utils/ApiError.js";
 import { reduceStock } from "../utils/features.js";
 import { invalidateCache } from "../utils/features.js"; 
 import { NewOrderRequestBody } from "../types/types.js";
 import { Request } from "express";
+import { redis, redisTTL } from "../app.js";
 
 export const myOrders = asyncHandler(
     async(req, res) =>{
-        const {id: user} = req.query;
-        const key = `my-ordes-${user}`
+        const { id: user } = req.query;
 
-        let orders = [];
-
-        if(myCache.has(key)) orders = JSON.parse(myCache.get(key) as string);
-
-        else{
-            orders = await Order.find({user});
-            myCache.set(key, JSON.stringify(orders));
+        const key = `my-orders-${user}`;
+      
+        let orders;
+      
+        orders = await redis.get(key);
+      
+        if (orders) orders = JSON.parse(orders);
+        else {
+          orders = await Order.find({ user });
+          await redis.setex(key, redisTTL, JSON.stringify(orders));
         }
-
         return res.status(200).json({
             success: true,
             orders,
@@ -32,13 +33,15 @@ export const myOrders = asyncHandler(
 export const allOrders = asyncHandler(
     async(req, res) =>{
         const key = `all-orders`;
-        let orders = [];
 
-        if(myCache.has(key)) orders = JSON.parse(myCache.get(key) as string);
-
-        else{
-            orders = await Order.find().populate("user", "name");
-            myCache.set(key, JSON.stringify(orders));
+        let orders;
+      
+        orders = await redis.get(key);
+      
+        if (orders) orders = JSON.parse(orders);
+        else {
+          orders = await Order.find().populate("user", "name");
+          await redis.setex(key, redisTTL, JSON.stringify(orders));
         }
 
         return res.status(200).json({
@@ -50,18 +53,19 @@ export const allOrders = asyncHandler(
 
 export const getSingleOrder = asyncHandler(
     async(req, res)=>{
-        const {id} = req.params;
-        const key = `order-${id}`
-
+        const { id } = req.params;
+        const key = `order-${id}`;
+      
         let order;
-
-        if(myCache.has(key)) order = JSON.parse(myCache.get(key) as string)
-        else{
-          order = await Order.findById(id).populate("user","name");
-
-        if(!order) throw new ApiError(400, "Order not found");
-
-        myCache.set(key, JSON.stringify(order));
+        order = await redis.get(key);
+      
+        if (order) order = JSON.parse(order);
+        else {
+          order = await Order.findById(id).populate("user", "name");
+      
+          if (!order) throw new ApiError( 404 ,"Order Not Found");
+      
+          await redis.setex(key, redisTTL, JSON.stringify(order));
         }
         return res.status(200).json({
             success: true,
@@ -100,7 +104,7 @@ export const newOrder = asyncHandler(
 
         await reduceStock(orderItems);
 
-        invalidateCache({
+        await invalidateCache({
             product: true,
             order: true,
             admin: true,
@@ -138,7 +142,7 @@ export const processOrder = asyncHandler(
 
         await order.save();
 
-        invalidateCache({
+        await invalidateCache({
             product: false,
             order: true,
             admin: true,
@@ -162,7 +166,7 @@ export const deleteOrder = asyncHandler(
 
         await order.deleteOne();
 
-        invalidateCache({
+        await invalidateCache({
             product: false,
             order: true,
             admin: true,
