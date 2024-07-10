@@ -81,6 +81,7 @@ export const updateCoupon = asyncHandler(
         const {id} = req.params;
         const {code, amount } = req.body;
         const coupon  = await Coupon.findById(id);
+        
         if(!coupon) throw new ApiError(400, "Invalid Coupon ID");
         if(code) coupon.code = code;
         if(amount) coupon.amount = amount;

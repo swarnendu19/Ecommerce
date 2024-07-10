@@ -12,6 +12,7 @@ export interface NewUserRequestBody{
 export interface NewProductRequestBody{
     name: string;
     category: string;
+    description: string;
     price: number;
     stock: number;
 }
@@ -46,10 +47,10 @@ export type InvalidateCacheProps = {
     product?: boolean;
     order?: boolean;
     admin?: boolean;
-    review?:string;
+    review?: boolean;
     userId?: string;
     orderId?: string;
-    productId?: string | string[];
+     productId?: string | string[];
   };
 
 

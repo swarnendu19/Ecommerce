@@ -1,6 +1,6 @@
 import { myCache } from "../app.js";
 import { Order } from "../models/order.js";
-import { Product } from "../models/produc.js";
+import { Product } from "../models/product.js";
 import { User } from "../models/user.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { calculatePercentage, getChartData, getInventories } from "../utils/features.js";
