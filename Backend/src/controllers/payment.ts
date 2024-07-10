@@ -10,7 +10,7 @@ export const createPaymentIntent = asyncHandler(
 
         if(!amount) throw new ApiError(400, "Please enter the amount");
 
-        const paymentIntent = await stripe.paymentIntent.create({
+        const paymentIntent = await stripe.paymentIntents.create({
             amount: Number(amount) * 100,
             currency: "INR",
         });
@@ -24,16 +24,16 @@ export const createPaymentIntent = asyncHandler(
 
 export const newCoupon = asyncHandler(
     async(req, res)=>{
-        const {coupon, amount} = req.body;
+        const {code, amount} = req.body;
 
-        if(!coupon || !amount)
+        if(!code || !amount)
          throw new ApiError(400, "Please Enter both Coupon and Amount");
 
-        await Coupon.create({code: coupon, amount});
+        await Coupon.create({code: code, amount});
         
         return res.status(201).json({
             success: true,
-            message: `Coupon ${coupon } created successfully`,
+            message: `Coupon ${code } created successfully`,
         })
     }
 )
@@ -62,6 +62,33 @@ export const allCoupons =asyncHandler(
             coupons
         })
     }
+)
+
+export const getCoupon = asyncHandler(
+    async(req, res)=>{
+        const {id} = req.params;
+        const coupon = await Coupon.findById(id);
+        if(!coupon) throw new ApiError(400, "Invalid Coupon ID");
+        return res.status(200).json({
+            success: true,
+            coupon,
+        })
+    }
+)
+
+export const updateCoupon = asyncHandler(
+    async(req, res)=>{
+        const {id} = req.params;
+        const {code, amount } = req.body;
+        const coupon  = await Coupon.findById(id);
+        if(!coupon) throw new ApiError(400, "Invalid Coupon ID");
+        if(code) coupon.code = code;
+        if(amount) coupon.amount = amount;
+        await coupon.save();
+        return res.status(200).json({
+            success: true,
+            message:`Coupon ${coupon.code} updated successfully`
+        })    }
 )
 
 export const deleteCoupon = asyncHandler(

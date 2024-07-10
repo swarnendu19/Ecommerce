@@ -93,7 +93,6 @@ export const newOrder = asyncHandler(
         const order = await Order.create({
             shippingInfo,
             orderItems,
-
             user,
             subtotal,
             tax,
