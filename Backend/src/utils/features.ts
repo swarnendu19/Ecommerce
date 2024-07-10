@@ -2,8 +2,31 @@ import { Product } from "../models/produc.js";
 import { ApiError } from "./ApiError.js";
 import { OrderItemType } from "../types/types.js";
 import { InvalidateCacheProps } from "../types/types.js";
-import { myCache } from "../app.js";
+import { redis } from "../app.js";
 import { Document } from "mongoose";
+import { Redis } from "ioredis";
+
+
+
+
+export const findAverageRatings = async (
+  productId: mongoose.Types.ObjectId
+) => {
+  let totalRating = 0;
+
+  const reviews = await Review.find({ product: productId });
+  reviews.forEach((review) => {
+    totalRating += review.rating;
+  });
+
+  const averateRating = Math.floor(totalRating / reviews.length) || 0;
+
+  return {
+    numOfReviews: reviews.length,
+    ratings: averateRating,
+  };
+};
+
 
 export const reduceStock = async(orderItems : OrderItemType[])=>{
     for(let i = 0; i< orderItems.length; i++){
@@ -16,48 +39,59 @@ export const reduceStock = async(orderItems : OrderItemType[])=>{
     }
 }
 
-export const invalidateCache = ({
-    product, 
-    order, 
-    admin,
-    userId,
-    orderId,
-    productId,
-
-}:InvalidateCacheProps)=>{
-    if(product){
-        const productKeys: string[] = [
-            "latest-products",
-            "categories",
-            "all-products",
-        ];
-        if(typeof productId === "string") productKeys.push(`product-${productId}`)
-
-        if(typeof productId === "object")
-         productId.forEach((i)=> productKeys.push(`product-${i}`))
-
-         myCache.del(productKeys)
-
-    }
-
-    if(order){
-        const ordersKeys: string[] = [
-            "all-orders",
-            `my-orders-${userId}`,
-            `order-${orderId}`,
-          ];
-          myCache.del(ordersKeys);
-    }
-    if (admin) {
-        myCache.del([
-          "admin-stats",
-          "admin-pie-charts",
-          "admin-bar-charts",
-          "admin-line-charts",
-        ]);
-      }
-
+export const connectRedis =(redisURI: string)=>{
+  const redis = new Redis(redisURI);
+  redis.on("connect", ()=> console.log("Reids Connected"));
+  redis.on("error", (e)=> console.log(e));
+  return redis;
 }
+
+export const invalidateCache = async ({
+  product,
+  order,
+  admin,
+  review,
+  userId,
+  orderId,
+  productId,
+}: InvalidateCacheProps) => {
+  if (review) {
+    await redis.del([`reviews-${productId}`]);
+  }
+
+  if (product) {
+    const productKeys: string[] = [
+      "latest-products",
+      "categories",
+      "all-products",
+    ];
+
+    if (typeof productId === "string") productKeys.push(`product-${productId}`);
+
+    if (typeof productId === "object")
+      productId.forEach((i) => productKeys.push(`product-${i}`));
+
+    await redis.del(productKeys);
+  }
+  if (order) {
+    const ordersKeys: string[] = [
+      "all-orders",
+      `my-orders-${userId}`,
+      `order-${orderId}`,
+    ];
+
+    await redis.del(ordersKeys);
+  }
+  if (admin) {
+    await redis.del([
+      "admin-stats",
+      "admin-pie-charts",
+      "admin-bar-charts",
+      "admin-line-charts",
+    ]);
+  }
+};
+
 
 
 export const calculatePercentage = (thisMonth: number, lastMonth: number) => {

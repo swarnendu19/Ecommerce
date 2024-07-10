@@ -1,17 +1,20 @@
 import express from "express";  
-import NodeCache from "node-cache" 
 import  bodyParser from "body-parser"
 import morgan from "morgan";
 import cors from "cors"
 import Stripe from "stripe";
+import { connectRedis } from "./utils/features.js";
 
 const app = express();  
 
   
-export const myCache = new NodeCache();
 
 const stripeKey = process.env.STRIPE_KEY || "";
-export const stripe = new stripe(stripeKey);
+export const stripe = new Stripe(stripeKey);
+
+const redisURI = process.env.REDIS_URI || "";
+export const redisTTL = process.env.REDIS_TTL || 60 * 60 * 4;
+export const redis = connectRedis(redisURI);
 
 
 app.use(bodyParser.json());  
