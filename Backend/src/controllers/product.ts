@@ -6,7 +6,7 @@ import { findAverageRatings, invalidateCache } from "../utils/features.js";
 import { BaseQuery, NewProductRequestBody, SearchRequestQuery } from "../types/types.js";
 import { redis, redisTTL } from "../app.js";
 import { deleteFromCloudinary, uploadToCloudinary } from "../utils/cloudinary.js";
-import { Review } from "./review.js";
+import { Review } from "../models/review.js";
 import { User } from "../models/user.js";
 
 export const getlatestProducts = asyncHandler(async (req, res, next) => {

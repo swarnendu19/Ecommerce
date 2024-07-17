@@ -1,30 +1,42 @@
-# Use the official Node.js image as the base image
-FROM node:20-alpine
+FROM node:20-alpine as builder
 
-# Create and set the working directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
-COPY package-lock.json ./
 
-# Install dependencies
-RUN npm install
+RUN npm ci
 
-# Copy the rest of the application code to the working directory
 COPY . .
 
-# Install TypeScript globally
-RUN npm install -g typescript
-
-# Build the TypeScript code
 RUN npm run build
 
-# Check if the dist directory and index.js file exist
-RUN ls -la dist
+#This will make the size of the container so big because of dev dependencies and all
+#Thats why I am going to use multistage system of Docker
 
-# Expose the port the app runs on
-EXPOSE 3000
+# build production image
 
-# Command to run the app
-CMD ["npm", "run","dev"]
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+
+#Env is in production,
+ENV NODE_ENV=production
+
+RUN npm ci
+
+COPY --from=builder /app/dist ./dist
+
+#Changing the ownership from root to Node
+RUN chown -R node:node /app && chmod -R 755 /app
+
+RUN npm install pm2 -g
+
+COPY ecosystem.config.js .
+
+USER node
+
+EXPOSE 5513
+
+CMD ["pm2-runtime", "dev ", "ecosystem.config.js"]
