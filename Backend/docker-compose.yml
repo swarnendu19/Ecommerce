@@ -8,5 +8,24 @@ services:
       - "6379:6379"
     environment:
       - REDIS_PASSWORD= 123
+    volumes:
+      - redis-data:/data/cache
+    networks:
+      - ecom-network
     command: redis-server --requirepass myredispassword
+
+  backendapi: 
+    image: swarnendu19/ecommerce-app:v1
+    container_name: ecommerce-app
+    ports:
+      -'5513:5513'
+    networks:
+      - ecom-network
+    env_file:
+      - .env
+    depends_on:
+      - redis
  
+networks:
+  ecom-network:
+    driver: bridge

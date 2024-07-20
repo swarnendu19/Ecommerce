@@ -5,7 +5,7 @@ import { InvalidateCacheProps } from "../types/types.js";
 import { redis } from "../app.js";
 import { Document } from "mongoose";
 import { Redis } from "ioredis";
-import { Review } from "../controllers/review.js";
+import { Review } from "../models/review.js";
 import mongoose from "mongoose";
 
 
