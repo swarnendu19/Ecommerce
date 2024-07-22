@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Column } from "react-table";
 import TableHOC from "../components/admin/TableHOC";
-import { Skeleton } from "../components/loader";
+import { Skeleton } from "../components/Loader";
 import { useMyOrdersQuery } from "../redux/api/orderAPI";
 import { RootState } from "../redux/store";
 import { CustomError } from "../types/api-types";
