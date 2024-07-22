@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ProductCard from "../components/product-card";
+import ProductCard from "../components/Product-card";
 import {
   useCategoriesQuery,
   useSearchProductsQuery,
