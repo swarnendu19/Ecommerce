@@ -11,15 +11,15 @@ import { getUser } from "./redux/api/userAPI";
 import { userExist, userNotExist } from "./redux/reducer/userReducer";
 import { RootState } from "./redux/store";
 
-const Home = lazy(() => import("./pages/home"));
-const Search = lazy(() => import("./pages/search"));
-const Cart = lazy(() => import("./pages/cart"));
-const Shipping = lazy(() => import("./pages/shipping"));
-const Login = lazy(() => import("./pages/login"));
-const Orders = lazy(() => import("./pages/orders"));
-const OrderDetails = lazy(() => import("./pages/order-details"));
-const NotFound = lazy(() => import("./pages/not-found"));
-const Checkout = lazy(() => import("./pages/checkout"));
+const Home = lazy(() => import("./pages/Home"));
+const Search = lazy(() => import("./pages/Search"));
+const Cart = lazy(() => import("./pages/Cart"));
+const Shipping = lazy(() => import("./pages/Shipping"));
+const Login = lazy(() => import("./pages/Login"));
+const Orders = lazy(() => import("./pages/Orders"));
+const OrderDetails = lazy(() => import("./pages/Order-details"));
+const NotFound = lazy(() => import("./pages/Not-found"));
+const Checkout = lazy(() => import("./pages/Checkout"));
 
 // Admin Routes Importing
 const Dashboard = lazy(() => import("./pages/admin/dashboard"));
