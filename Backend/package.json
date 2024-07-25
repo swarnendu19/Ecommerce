@@ -9,7 +9,7 @@
     "build": "tsc",
     "watch": "tsc -w",
     "dev": "npx tsx watch ./src/index.ts",
-    "docker:publish": "docker build -t swarnendu19/ecommerce-app:v5 --platform linux/amd64 . && docker push swarnendu19/ecommerce-app:v5",
+    "docker:publish": "docker build -t swarnendu19/ecommerce-app:v5.4 --platform linux/amd64 . && docker push swarnendu19/ecommerce-app:v5.4",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

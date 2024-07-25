@@ -15,7 +15,7 @@ services:
     command: redis-server --requirepass myredispassword
 
   backendapi: 
-    image: swarnendu19/ecommerce-app:v5
+    image: swarnendu19/ecommerce-app:v5.4
     container_name: ecommerce-app
     ports:
       - "5513:5513"

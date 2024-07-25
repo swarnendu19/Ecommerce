@@ -13,6 +13,8 @@ type ResType =
       error: FetchBaseQueryError | SerializedError;
     };
 
+ 
+
 export const responseToast = (
   res: ResType,
   navigate: NavigateFunction | null,
