@@ -41,5 +41,4 @@ app.use("/api/v1/payment", paymentRoute)
 app.use("/api/v1/dashboard", dashboardRoute)
 
 app.use("/uploads", express.static("uploads"))
-
 export {app}
