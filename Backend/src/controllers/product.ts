@@ -62,7 +62,7 @@ export const getlatestProducts = asyncHandler(async (req, res, next) => {
 
   export const getSingleProduct = asyncHandler(async (req, res, next) => {
     let product;
-    const id = req.params.id;
+    const id = req.params.id.trim();
     const key = `product-${id}`;
     product = await redis.get(key);
 
