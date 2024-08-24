@@ -104,9 +104,10 @@ export const getlatestProducts = asyncHandler(async (req, res, next) => {
             description,
             stock,
             category: category.toLowerCase(),
-            photo: photosURL,
+            photos: photosURL,
         })
-
+          
+         
         await invalidateCache({product: true, admin: true})
         
         return res.status(201).json({
@@ -162,7 +163,7 @@ export const updateProduct = asyncHandler(
 
 export const deleteProduct = asyncHandler(
   async(req, res)=>{
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findById(req.params.id.trim());
     if(!product) throw new ApiError(404, "Product Not found")
 
     const ids = product.photos.map((photo) => photo.public_id);
